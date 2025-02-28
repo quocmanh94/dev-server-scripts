@@ -1,0 +1,162 @@
+{
+  "ru": {
+    "window_title": "MPG Dev Server Control",
+    "window_title_first_run": "MPG Dev Server Control - Первый запуск",
+    "window_title_closing": "MPG Dev Server Control - Закрытие через {0} сек.",
+    "first_run": {
+      "title": "ПЕРВЫЙ ЗАПУСК DAYZ СЕРВЕРА",
+      "searching": "1. Поиск установленной игры DayZ...",
+      "found": "Найдена установка DayZ:",
+      "not_found": "Установка DayZ не найдена.",
+      "using_defaults": "Будут использованы пути по умолчанию.",
+      "release_version": "  • Релизная версия: {0}",
+      "experimental_version": "  • Экспериментальная версия: {0}",
+      "workshop_folder": "  • Папка Workshop: {0}",
+      "creating_config": "2. Создание файла конфигурации...",
+      "config_created": "3. Файл конфигурации создан: {0}",
+      "creating_shortcuts": "4. Создание ярлыков...",
+      "shortcuts_created": "5. Ярлыки созданы",
+      "what_next": "Что нужно сделать:",
+      "next_steps": [
+        "1. Откройте файл конфигурации в текстовом редакторе",
+        "2. Укажите правильные пути к игре и Workshop",
+        "3. Настройте пути к серверу",
+        "4. Выберите нужные пресеты модов",
+        "5. Сохраните изменения",
+        "6. Используйте созданные ярлыки для управления сервером"
+      ],
+      "set_game_paths": "Обязательно укажите правильные пути к игре!"
+    },
+    "shortcuts": {
+      "folder_created": "Создана папка для ярлыков: {0}",
+      "created": "Создан ярлык: {0}",
+      "icons_not_found": "Папка с иконками не найдена: {0}",
+      "icon_not_found": "Иконка не найдена: {0}",
+      "descriptions": {
+        "start_server": "Запуск сервера DayZ",
+        "start_client": "Запуск клиента DayZ",
+        "start_all": "Запуск сервера и клиента DayZ",
+        "kill_server": "Остановка сервера DayZ",
+        "kill_client": "Остановка клиента DayZ",
+        "kill_all": "Остановка сервера и клиента DayZ"
+      }
+    },
+    "errors": {
+      "preset_not_found": "Выбранный пресет {0} '{1}' не найден в конфигурации!",
+      "executable_not_found": "Не найден исполняемый файл {0}: {1}"
+    },
+    "info": {
+      "server_config": "КОНФИГУРАЦИЯ DAYZ СЕРВЕРА",
+      "server_preset": "Пресет сервера",
+      "mod_preset": "Пресет модов",
+      "build_type": "Тип сборки",
+      "experimental": "Экспериментальная",
+      "mode": "Режим",
+      "diagnostic": "Диагностический",
+      "client_mods": "Моды клиента:",
+      "server_mods": "Моды сервера:",
+      "list_item": "  • {0}",
+      "stopping_server": "Останавливаю сервер DayZ (если запущен)...",
+      "stopping_client": "Останавливаю клиент DayZ (если запущен)...",
+      "clearing_logs": "Очистка логов...",
+      "starting_server": "Запуск сервера на порту {0}",
+      "starting_client": "Запуск клиента (127.0.0.1:{0})",
+      "launch_complete": "Запуск завершен!",
+      "press_any_key": "Нажмите любую клавишу для выхода..."
+    },
+    "separator": "═══════════════════════",
+    "logs": {
+      "cleaning_server": "Очистка логов сервера...",
+      "found_server": "Найдено {0} файлов логов в папке сервера:",
+      "deleting": "  Удаление: {0}",
+      "server_cleaned": "Логи сервера очищены",
+      "profile_not_found": "Логи профиля не найдены",
+      "cleaning_client": "Очистка логов клиента ({0})...",
+      "found_client": "Найдено {0} файлов логов клиента:",
+      "client_cleaned": "Логи клиента очищены",
+      "complete": "Очистка логов завершена!",
+      "server_running": "Сервер запущен, пропускаем очистку логов сервера",
+      "client_running": "Клиент запущен, пропускаем очистку логов клиента"
+    }
+  },
+  "en": {
+    "window_title": "MPG Dev Server Control",
+    "window_title_first_run": "MPG Dev Server Control - First Run",
+    "window_title_closing": "MPG Dev Server Control - Closing in {0} sec.",
+    "first_run": {
+      "title": "DAYZ SERVER FIRST RUN",
+      "searching": "1. Searching for DayZ installation...",
+      "found": "Found DayZ installation:",
+      "not_found": "DayZ installation not found.",
+      "using_defaults": "Default paths will be used.",
+      "release_version": "  • Release version: {0}",
+      "experimental_version": "  • Experimental version: {0}",
+      "workshop_folder": "  • Workshop folder: {0}",
+      "creating_config": "2. Creating configuration file...",
+      "config_created": "3. Configuration file created: {0}",
+      "creating_shortcuts": "4. Creating shortcuts...",
+      "shortcuts_created": "5. Shortcuts created",
+      "what_next": "What to do next:",
+      "next_steps": [
+        "1. Open the configuration file in a text editor",
+        "2. Set correct paths to game and Workshop",
+        "3. Configure server paths",
+        "4. Choose mod presets",
+        "5. Save changes",
+        "6. Use created shortcuts to control the server"
+      ],
+      "set_game_paths": "Make sure to set correct game paths!"
+    },
+    "shortcuts": {
+      "folder_created": "Created shortcuts folder: {0}",
+      "created": "Created shortcut: {0}",
+      "icons_not_found": "Icons folder not found: {0}",
+      "icon_not_found": "Icon not found: {0}",
+      "descriptions": {
+        "start_server": "Start DayZ Server",
+        "start_client": "Start DayZ Client",
+        "start_all": "Start DayZ Server and Client",
+        "kill_server": "Stop DayZ Server",
+        "kill_client": "Stop DayZ Client",
+        "kill_all": "Stop DayZ Server and Client"
+      }
+    },
+    "errors": {
+      "preset_not_found": "Selected {0} preset '{1}' not found in configuration!",
+      "executable_not_found": "{0} executable not found: {1}"
+    },
+    "info": {
+      "server_config": "DAYZ SERVER CONFIGURATION",
+      "server_preset": "Server Preset",
+      "mod_preset": "Mod Preset",
+      "build_type": "Build Type",
+      "experimental": "Experimental",
+      "mode": "Mode",
+      "diagnostic": "Diagnostic",
+      "client_mods": "Client mods:",
+      "server_mods": "Server mods:",
+      "list_item": "  • {0}",
+      "stopping_server": "Stopping DayZ Server (if running)...",
+      "stopping_client": "Stopping DayZ Client (if running)...",
+      "clearing_logs": "Clearing logs...",
+      "starting_server": "Starting server on port {0}",
+      "starting_client": "Starting client (127.0.0.1:{0})",
+      "launch_complete": "Launch complete!",
+      "press_any_key": "Press any key to exit..."
+    },
+    "separator": "═══════════════════════",
+    "logs": {
+      "cleaning_server": "Cleaning server logs...",
+      "found_server": "Found {0} log files in server folder:",
+      "deleting": "  Deleting: {0}",
+      "server_cleaned": "Server logs cleaned",
+      "profile_not_found": "Profile logs not found",
+      "cleaning_client": "Cleaning client logs ({0})...",
+      "found_client": "Found {0} client log files:",
+      "client_cleaned": "Client logs cleaned",
+      "complete": "Log cleaning complete!",
+      "server_running": "Server is running, skipping server logs cleanup",
+      "client_running": "Client is running, skipping client logs cleanup"
+    }
+  }
+}
