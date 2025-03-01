@@ -1,12 +1,30 @@
 # Загрузка локализации
 $localesPath = Join-Path $PSScriptRoot "locales.json"
 $script:locales = Get-Content -Path $localesPath -Raw | ConvertFrom-Json
-$script:currentLocale = "en" # По умолчанию английский
 
-# Определение языка системы
-$systemLocale = (Get-WinSystemLocale).Name
-if ($systemLocale -like "ru*") {
-    $script:currentLocale = "ru"
+# Функция для определения языка системы
+function Get-SystemLanguage {
+    $systemLocale = (Get-WinSystemLocale).Name
+    if ($systemLocale -like "ru*") {
+        return "ru"
+    }
+    return "en"
+}
+
+# Определение языка из конфигурации или системы
+function Set-CurrentLanguage {
+    param (
+        [string]$configLang = "auto"
+    )
+
+    # Если язык задан явно и существует в локализации
+    if ($configLang -ne "auto" -and ($configLang -eq "ru" -or $configLang -eq "en")) {
+        $script:currentLocale = $configLang
+        return
+    }
+
+    # Иначе определяем язык системы
+    $script:currentLocale = Get-SystemLanguage
 }
 
 # Функция для получения локализованной строки
@@ -71,7 +89,7 @@ function Write-ColorOutput {
 
     if ($Prefix) {
         # Устанавливаем фиксированную ширину для префиксов
-        $prefix = "[" + $Prefix.PadRight(7) + "]"
+        $prefix = "[" + (Get-LocalizedString $Prefix).PadRight(7) + "]"
         Write-Host $prefix -ForegroundColor $prefixColor -NoNewline
         Write-Host " " -NoNewline
     }
@@ -96,7 +114,7 @@ function Write-ConfigParam {
         [string]$LabelKey,
         [string]$Value,
         [string]$ForegroundColor = "White",
-        [int]$Padding = 20
+        [int]$Padding = 0
     )
 
     $label = Get-LocalizedString -Key $LabelKey
@@ -125,7 +143,7 @@ function New-DayZShortcut {
     $linksFolder = Join-Path $PSScriptRoot "..\links"
     if (-not (Test-Path $linksFolder)) {
         New-Item -ItemType Directory -Path $linksFolder | Out-Null
-        Write-ColorOutput "shortcuts.folder_created" -ForegroundColor "Yellow" -Prefix "ЯРЛЫК" -FormatArgs @("links")
+        Write-ColorOutput "shortcuts.folder_created" -ForegroundColor "Yellow" -Prefix "prefixes.shortcut" -FormatArgs @("links")
     }
 
     # Проверяем наличие папки с иконками
@@ -154,7 +172,7 @@ function New-DayZShortcut {
 
     $shortcut.Save()
 
-    Write-ColorOutput "shortcuts.created" -ForegroundColor "Green" -Prefix "ЯРЛЫК" -FormatArgs @($shortcutName)
+    Write-ColorOutput "shortcuts.created" -ForegroundColor "Green" -Prefix "prefixes.shortcut" -FormatArgs @($shortcutName)
 }
 
 # Функция для создания всех ярлыков
@@ -276,6 +294,7 @@ function Find-DayZInstallPath {
 # Проверка наличия файла конфигурации и создание его, если отсутствует
 if (-not (Test-Path $configPath)) {
     $script:isFirstRun = $true
+    Set-CurrentLanguage
 
     # Установка заголовка окна при первом запуске
     $host.UI.RawUI.WindowTitle = Get-LocalizedString "window_title_first_run"
@@ -314,6 +333,7 @@ if (-not (Test-Path $configPath)) {
             serverPreset = "release"
             modPreset = "vanilla"
             autoCloseTime = 20
+            lang = "auto"
         }
 
         serverPresets = @{
@@ -400,6 +420,9 @@ $config = Get-Content -Path $configPath -Raw | ConvertFrom-Json
 $selectedServerPreset = $config.active.serverPreset
 $selectedModPreset = $config.active.modPreset
 $autoCloseTime = $config.active.autoCloseTime
+
+# Устанавливаем язык по умолчанию из системы
+Set-CurrentLanguage $config.active.lang
 
 # Если autoCloseTime не задан, устанавливаем значение по умолчанию
 if (-not $autoCloseTime) {

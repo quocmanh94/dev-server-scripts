@@ -3,6 +3,15 @@
     "window_title": "MPG Dev Server Control",
     "window_title_first_run": "MPG Dev Server Control - Первый запуск",
     "window_title_closing": "MPG Dev Server Control - Закрытие через {0} сек.",
+    "prefixes": {
+      "error": "ОШИБКА",
+      "system": "СИСТЕМА",
+      "server": "СЕРВЕР",
+      "client": "КЛИЕНТ",
+      "logs": "ЛОГИ",
+      "shortcut": "ЯРЛЫК",
+      "important": "ВАЖНО"
+    },
     "first_run": {
       "title": "ПЕРВЫЙ ЗАПУСК DAYZ СЕРВЕРА",
       "searching": "1. Поиск установленной игры DayZ...",
@@ -64,7 +73,7 @@
       "launch_complete": "Запуск завершен!",
       "press_any_key": "Нажмите любую клавишу для выхода..."
     },
-    "separator": "═══════════════════════",
+    "separator": "══════════════════════════",
     "logs": {
       "cleaning_server": "Очистка логов сервера...",
       "found_server": "Найдено {0} файлов логов в папке сервера:",
@@ -83,6 +92,15 @@
     "window_title": "MPG Dev Server Control",
     "window_title_first_run": "MPG Dev Server Control - First Run",
     "window_title_closing": "MPG Dev Server Control - Closing in {0} sec.",
+    "prefixes": {
+      "error": "ERROR",
+      "system": "SYSTEM",
+      "server": "SERVER",
+      "client": "CLIENT",
+      "logs": "LOGS",
+      "shortcut": "LINK",
+      "important": "IMPORTANT"
+    },
     "first_run": {
       "title": "DAYZ SERVER FIRST RUN",
       "searching": "1. Searching for DayZ installation...",
@@ -144,7 +162,7 @@
       "launch_complete": "Launch complete!",
       "press_any_key": "Press any key to exit..."
     },
-    "separator": "═══════════════════════",
+    "separator": "══════════════════════════",
     "logs": {
       "cleaning_server": "Cleaning server logs...",
       "found_server": "Found {0} log files in server folder:",
