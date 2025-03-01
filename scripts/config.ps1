@@ -164,10 +164,10 @@ function Resolve-ModPath {
     param ([string]$modPath)
 
     if ( $modPath.StartsWith('$steam/')) {
-        return $modPath.Replace('$steam/', $steamWorkshopPath)
+        return $modPath.Replace('$steam', $steamWorkshopPath)
     }
     elseif ($modPath.StartsWith('$local/')) {
-        return $modPath.Replace('$local/', $localModsPath)
+        return $modPath.Replace('$local', $localModsPath)
     }
     else {
         return $modPath
@@ -175,7 +175,7 @@ function Resolve-ModPath {
 }
 
 function Format-Path {
-    param ([string]$path, [switch]$noTrailingSlash)
+    param ([string]$path)
 
     if (-not $path) {
         return $path
@@ -183,11 +183,6 @@ function Format-Path {
 
     # Заменяем обратные слеши на прямые
     $normalizedPath = $path.Replace('\', '/')
-
-    # Добавляем слеш в конце только если не указан параметр noTrailingSlash
-    if (-not $noTrailingSlash -and -not $normalizedPath.EndsWith('/')) {
-        $normalizedPath = "$normalizedPath/"
-    }
 
     return $normalizedPath
 }
@@ -301,19 +296,19 @@ if (-not (Test-Path $configPath)) {
         $dayzPaths.Release
     }
     else {
-        "C:/SteamLibrary/steamapps/common/DayZ/"
+        "C:/SteamLibrary/steamapps/common/DayZ"
     }
     $defaultExpGamePath = if ($dayzPaths -and $dayzPaths.Experimental) {
         $dayzPaths.Experimental
     }
     else {
-        "C:/SteamLibrary/steamapps/common/DayZ Exp/"
+        "C:/SteamLibrary/steamapps/common/DayZ Exp"
     }
     $defaultWorkshopPath = if ($dayzPaths -and $dayzPaths.Workshop) {
         $dayzPaths.Workshop
     }
     else {
-        "C:/SteamLibrary/steamapps/common/DayZ/!Workshop/"
+        "C:/SteamLibrary/steamapps/common/DayZ/!Workshop"
     }
 
     $defaultConfig = @{
@@ -327,8 +322,8 @@ if (-not (Test-Path $configPath)) {
         serverPresets = @{
             release = @{
                 gamePath = $defaultGamePath
-                serverPath = "C:/DayZServer/"
-                profilePath = "C:/DayZServer/profiles/"
+                serverPath = "C:/DayZServer"
+                profilePath = "C:/DayZServer/profiles"
                 missionPath = ""
                 serverPort = 2300
                 serverConfig = "ServerDev.cfg"
@@ -338,14 +333,14 @@ if (-not (Test-Path $configPath)) {
                 cleanLogs = "all"
                 workshop = @{
                     steam = $defaultWorkshopPath
-                    local = "C:/PDrive/"
+                    local = "C:/PDrive"
                 }
             }
 
             experimental = @{
                 gamePath = $defaultExpGamePath
-                serverPath = "C:/DayZServerExperimental/"
-                profilePath = "C:/DayZServerExperimental/profiles/"
+                serverPath = "C:/DayZServerExperimental"
+                profilePath = "C:/DayZServerExperimental/profiles"
                 missionPath = ""
                 serverPort = 2400
                 serverConfig = "ServerDev.cfg"
@@ -355,14 +350,14 @@ if (-not (Test-Path $configPath)) {
                 isFilePatching = $false
                 workshop = @{
                     steam = $defaultWorkshopPath
-                    local = "C:/PDrive/"
+                    local = "C:/PDrive"
                 }
             }
 
             myPreset1 = @{
                 gamePath = $defaultGamePath
-                serverPath = "C:/DayZServer/"
-                profilePath = "C:/DayZServer/profiles/"
+                serverPath = "C:/DayZServer"
+                profilePath = "C:/DayZServer/profiles"
                 missionPath = ""
                 serverPort = 2500
                 serverConfig = "ServerDev.cfg"
@@ -372,7 +367,7 @@ if (-not (Test-Path $configPath)) {
                 cleanLogs = "all"
                 workshop = @{
                     steam = $defaultWorkshopPath
-                    local = "C:/PDrive/"
+                    local = "C:/PDrive"
                 }
             }
         }
@@ -469,7 +464,7 @@ $localModsPath = $serverPreset.workshop.local
 $gamePath = Format-Path $serverPreset.gamePath
 $serverPath = Format-Path $serverPreset.serverPath
 $profilePath = Format-Path $serverPreset.profilePath
-$missionPath = Format-Path $serverPreset.missionPath -noTrailingSlash
+$missionPath = Format-Path $serverPreset.missionPath
 $steamWorkshopPath = Format-Path $serverPreset.workshop.steam
 $localModsPath = Format-Path $serverPreset.workshop.local
 

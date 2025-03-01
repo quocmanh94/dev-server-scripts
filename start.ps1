@@ -131,6 +131,9 @@ if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "serv
         $serverArgs += "-filePatching"
     }
 
+    #    Write-ColorOutput (Normalize-Path $serverExe)
+    #    Write-ColorOutput (Normalize-Path $serverArgs)
+
     Start-Process -FilePath $serverExe -ArgumentList (Normalize-Path $serverArgs)
 }
 
@@ -155,7 +158,10 @@ if ((Test-Path $gamePath) -and (($startType -eq "all" -or $startType -eq "client
         $clientArgs += "-filePatching"
     }
 
-    Start-Process -FilePath $clientExe -ArgumentList (Normalize-Path $clientArgs)
+    #    Write-ColorOutput (Normalize-Path $clientExe)
+    #    Write-ColorOutput (Normalize-Path $clientArgs)
+
+    Start-Process -FilePath (Normalize-Path $clientExe) -ArgumentList (Normalize-Path $clientArgs)
     Pop-Location
 }
 
