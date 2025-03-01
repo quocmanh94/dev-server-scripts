@@ -27,12 +27,11 @@
       "shortcuts_created": "5. Ярлыки созданы",
       "what_next": "Что нужно сделать:",
       "next_steps": [
-        "1. Откройте файл конфигурации в текстовом редакторе",
-        "2. Укажите правильные пути к игре и Workshop",
-        "3. Настройте пути к серверу",
-        "4. Выберите нужные пресеты модов",
-        "5. Сохраните изменения",
-        "6. Используйте созданные ярлыки для управления сервером"
+        "1. Откройте файл config.json",
+        "2. Проверьте правильные ли пути к игре и воркшопу",
+        "3. Настройте пути к серверу, профилю и мисии",
+        "4. Создайте собственные или отредактируйте пресеты серверов и модов",
+        "5. Используйте созданные ярлыки для простого управления сервером"
       ],
       "set_game_paths": "Обязательно укажите правильные пути к игре!"
     },
@@ -74,7 +73,7 @@
       "clearing_logs": "Очистка логов...",
       "starting_server": "Запуск сервера на порту {0}",
       "starting_client": "Запуск клиента (127.0.0.1:{0})",
-      "launch_complete": "Запуск завершен!",
+      "launch_complete": "Скрипт завершен!",
       "press_any_key": "Нажмите любую клавишу для выхода...",
       "waiting_server": "Ожидание запуска сервера...",
       "server_started": "Сервер запущен!"
@@ -122,12 +121,11 @@
       "shortcuts_created": "5. Shortcuts created",
       "what_next": "What to do next:",
       "next_steps": [
-        "1. Open the configuration file in a text editor",
-        "2. Set correct paths to game and Workshop",
-        "3. Configure server paths",
-        "4. Choose mod presets",
-        "5. Save changes",
-        "6. Use created shortcuts to control the server"
+        "1. Open the config.json file",
+        "2. Check if the paths to the game and workshop are correct",
+        "3. Customize the server, profile and mission paths",
+        "4. Create your own or edit server and mod presets",
+        "5. Use the shortcuts you've created to easily manage your server"
       ],
       "set_game_paths": "Make sure to set correct game paths!"
     },
@@ -169,7 +167,7 @@
       "clearing_logs": "Clearing logs...",
       "starting_server": "Starting server on port {0}",
       "starting_client": "Starting client (127.0.0.1:{0})",
-      "launch_complete": "Launch complete!",
+      "launch_complete": "Script complete!",
       "press_any_key": "Press any key to exit...",
       "waiting_server": "Waiting for server to start...",
       "server_started": "Server started!"

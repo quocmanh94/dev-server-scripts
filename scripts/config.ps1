@@ -1,4 +1,4 @@
-# Загрузка локализации
+# Загрузка локали
 $localesPath = Join-Path $PSScriptRoot "locales.json"
 $script:locales = Get-Content -Path $localesPath -Raw | ConvertFrom-Json
 
@@ -13,54 +13,39 @@ function Get-SystemLanguage {
 
 # Определение языка из конфигурации или системы
 function Set-CurrentLanguage {
-    param (
-        [string]$configLang = "auto"
-    )
+    param ([string]$configLang = "auto")
 
-    # Если язык задан явно и существует в локализации
     if ($configLang -ne "auto" -and ($configLang -eq "ru" -or $configLang -eq "en")) {
         $script:currentLocale = $configLang
         return
     }
 
-    # Иначе определяем язык системы
     $script:currentLocale = Get-SystemLanguage
 }
 
 # Функция для получения локализованной строки
 function Get-LocalizedString {
-    param (
-        [string]$Key,
-        [array]$FormatArgs = @()
-    )
+    param ([string]$Key, [array]$FormatArgs = @())
 
-    # Разбиваем ключ на части (для вложенных объектов)
     $keyParts = $Key.Split('.')
 
-    # Начинаем с корня локализации для текущего языка
     $current = $script:locales.$script:currentLocale
 
-    # Проходим по частям ключа
     foreach ($part in $keyParts) {
         $current = $current.$part
         if ($null -eq $current) {
-            # Получаем имя текущей функции и строку с номером
             $callStack = Get-PSCallStack
             $caller = $callStack[1]
-            $location = "$($caller.ScriptName):$($caller.ScriptLineNumber)"
+            $location = "$( $caller.ScriptName ):$( $caller.ScriptLineNumber )"
 
-            # Формируем сообщение об ошибке
             $errorMessage = "Missing localization key '$Key' in $script:currentLocale locale at $location"
 
-            # Записываем в лог с уровнем Debug, чтобы не засорять консоль
             Write-Debug $errorMessage
 
-            # Возвращаем ключ в квадратных скобках, чтобы было видно, что это отсутствующий перевод
             return "[$Key]"
         }
     }
 
-    # Если есть аргументы для форматирования
     if ($FormatArgs.Count -gt 0) {
         return [string]::Format($current, $FormatArgs)
     }
@@ -68,92 +53,66 @@ function Get-LocalizedString {
     return $current
 }
 
-# Скрипт для загрузки конфигурации из JSON файла
 $configPath = Join-Path $PSScriptRoot "..\config.json"
 $script:isFirstRun = $false
 
-# Обновляем функцию Write-ColorOutput для поддержки прямых строк
 function Write-ColorOutput {
-    param (
-        [Parameter(Mandatory=$true)]
+    param ([Parameter(Mandatory = $true)]
         [AllowEmptyString()]
-        [string]$Message,
-        [array]$FormatArgs = @(),
-        [string]$ForegroundColor = "White",
-        [string]$Prefix = "",
-        [switch]$NoNewLine,
-        [switch]$NoLocalization
-    )
+        [string]$Message, [array]$FormatArgs = @(), [string]$ForegroundColor = "White", [string]$Prefix = "", [switch]$NoNewLine, [switch]$NoLocalization)
 
     $prefixColor = "DarkGray"
 
     if ($Prefix) {
-        # Устанавливаем фиксированную ширину для префиксов
         $prefix = "[" + (Get-LocalizedString $Prefix).PadRight(7) + "]"
         Write-Host $prefix -ForegroundColor $prefixColor -NoNewline
         Write-Host " " -NoNewline
     }
 
-    # Если строка пустая или не требует локализации, используем её как есть
     $outputMessage = if ($NoLocalization -or $Message -eq "" -or $Message -match "^[=\s]*$") {
         $Message
-    } else {
+    }
+    else {
         Get-LocalizedString -Key $Message -FormatArgs $FormatArgs
     }
 
     if ($NoNewLine) {
         Write-Host $outputMessage -ForegroundColor $ForegroundColor -NoNewline
-    } else {
+    }
+    else {
         Write-Host $outputMessage -ForegroundColor $ForegroundColor
     }
 }
 
-# Обновляем функцию Write-ConfigParam для корректной обработки пустых значений
 function Write-ConfigParam {
-    param (
-        [string]$LabelKey,
-        [string]$Value,
-        [string]$ForegroundColor = "White",
-        [int]$Padding = 0
-    )
+    param ([string]$LabelKey, [string]$Value, [string]$ForegroundColor = "White", [int]$Padding = 0)
 
     $label = Get-LocalizedString -Key $LabelKey
-    Write-Host "$($label.PadRight($padding)): " -ForegroundColor "Cyan" -NoNewline
+    Write-Host "$($label.PadRight($padding) ): " -ForegroundColor "Cyan" -NoNewline
 
-    # Обрабатываем пустые значения
-    if ([string]::IsNullOrEmpty($Value)) {
+    if ( [string]::IsNullOrEmpty($Value)) {
         $Value = "-"
     }
 
-    # Выводим значение напрямую без локализации
     Write-Host $Value -ForegroundColor $ForegroundColor
 }
 
 # Функция для создания ярлыков
 function New-DayZShortcut {
-    param (
-        [string]$scriptPath,
-        [string]$shortcutName,
-        [string]$arguments,
-        [string]$description,
-        [string]$iconType
-    )
+    param ([string]$scriptPath, [string]$shortcutName, [string]$arguments, [string]$description, [string]$iconType)
 
-    # Проверяем и создаем папку для ярлыков, если её нет
     $linksFolder = Join-Path $PSScriptRoot "..\links"
     if (-not (Test-Path $linksFolder)) {
         New-Item -ItemType Directory -Path $linksFolder | Out-Null
         Write-ColorOutput "shortcuts.folder_created" -ForegroundColor "Yellow" -Prefix "prefixes.shortcut" -FormatArgs @("links")
     }
 
-    # Проверяем наличие папки с иконками
     $iconsFolder = Join-Path $PSScriptRoot "icons"
     if (-not (Test-Path $iconsFolder)) {
         Write-ColorOutput "shortcuts.icons_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("icons")
         exit 1
     }
 
-    # Проверяем наличие .ico файла
     $iconFile = Join-Path $iconsFolder "$iconType.ico"
     if (-not (Test-Path $iconFile)) {
         Write-ColorOutput "shortcuts.icon_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @($iconType)
@@ -180,7 +139,6 @@ function New-DayZShortcuts {
     $scriptDir = $PSScriptRoot
     $rootDir = Split-Path $scriptDir -Parent
 
-    # Ярлыки для запуска
     New-DayZShortcut -scriptPath "$rootDir\start.ps1" -shortcutName "Start Server" `
         -arguments "server" -description (Get-LocalizedString "shortcuts.descriptions.start_server") -iconType "server-start"
 
@@ -203,11 +161,9 @@ function New-DayZShortcuts {
 
 # Функция для обработки путей модов
 function Resolve-ModPath {
-    param (
-        [string]$modPath
-    )
+    param ([string]$modPath)
 
-    if ($modPath.StartsWith('$steam/')) {
+    if ( $modPath.StartsWith('$steam/')) {
         return $modPath.Replace('$steam/', $steamWorkshopPath)
     }
     elseif ($modPath.StartsWith('$local/')) {
@@ -218,12 +174,8 @@ function Resolve-ModPath {
     }
 }
 
-# Заменяем функцию Format-Path на новую версию
 function Format-Path {
-    param (
-        [string]$path,
-        [switch]$noTrailingSlash
-    )
+    param ([string]$path, [switch]$noTrailingSlash)
 
     if (-not $path) {
         return $path
@@ -240,13 +192,22 @@ function Format-Path {
     return $normalizedPath
 }
 
-# Добавим новую функцию для поиска пути установки DayZ
+
+function Normalize-Path {
+    param ([string]$path)
+
+    if (-not $path) {
+        return $path
+    }
+
+    $rollbackPath = $path.Replace('/', '\')
+
+    return $rollbackPath
+}
+
 function Find-DayZInstallPath {
     $steamPaths = @(
-    # Стандартный путь установки Steam
-        "HKLM:\SOFTWARE\WOW6432Node\Valve\Steam",
-        # Альтернативный путь для 32-битных систем
-        "HKLM:\SOFTWARE\Valve\Steam"
+        "HKLM:\SOFTWARE\WOW6432Node\Valve\Steam", "HKLM:\SOFTWARE\Valve\Steam"
     )
 
     $steamPath = $null
@@ -261,31 +222,41 @@ function Find-DayZInstallPath {
         return $null
     }
 
-    # Получаем список библиотек Steam из файла libraryfolders.vdf
     $libraryFoldersPath = Join-Path $steamPath "steamapps\libraryfolders.vdf"
     if (-not (Test-Path $libraryFoldersPath)) {
         return $null
     }
 
     $content = Get-Content $libraryFoldersPath -Raw
-    # Ищем все пути к библиотекам Steam
     $libraries = [regex]::Matches($content, '"path"\s+"([^"]+)"') | ForEach-Object { $_.Groups[1].Value.Replace("\\", "\") }
 
-    # DayZ App ID
     $dayzAppId = "221100"
 
-    # Проверяем каждую библиотеку на наличие DayZ
     foreach ($lib in $libraries) {
         $dayzPath = Join-Path $lib "steamapps\common\DayZ"
         $dayzExpPath = Join-Path $lib "steamapps\common\DayZ Exp"
         $manifestPath = Join-Path $lib "steamapps\appmanifest_$dayzAppId.acf"
 
         if (Test-Path $manifestPath) {
-            # Нашли установленную игру, нормализуем пути
             $paths = @{
-                Release = if (Test-Path $dayzPath) { Format-Path $dayzPath } else { $null }
-                Experimental = if (Test-Path $dayzExpPath) { Format-Path $dayzExpPath } else { $null }
-                Workshop = if (Test-Path $dayzPath) { Format-Path (Join-Path $dayzPath "!Workshop") } else { $null }
+                Release = if (Test-Path $dayzPath) {
+                    Format-Path $dayzPath
+                }
+                else {
+                    $null
+                }
+                Experimental = if (Test-Path $dayzExpPath) {
+                    Format-Path $dayzExpPath
+                }
+                else {
+                    $null
+                }
+                Workshop = if (Test-Path $dayzPath) {
+                    Format-Path (Join-Path $dayzPath "!Workshop")
+                }
+                else {
+                    $null
+                }
             }
             return $paths
         }
@@ -299,7 +270,6 @@ if (-not (Test-Path $configPath)) {
     $script:isFirstRun = $true
     Set-CurrentLanguage
 
-    # Установка заголовка окна при первом запуске
     $host.UI.RawUI.WindowTitle = Get-LocalizedString "window_title_first_run"
 
     Write-ColorOutput "first_run.title" -ForegroundColor "Yellow"
@@ -318,7 +288,8 @@ if (-not (Test-Path $configPath)) {
             Write-ColorOutput "first_run.workshop_folder" -ForegroundColor "White" -FormatArgs @($dayzPaths.Workshop)
         }
         Write-ColorOutput " " -NoLocalization
-    } else {
+    }
+    else {
         Write-ColorOutput "first_run.not_found" -ForegroundColor "Yellow"
         Write-ColorOutput "first_run.using_defaults" -ForegroundColor "Yellow"
         Write-ColorOutput " " -NoLocalization
@@ -326,12 +297,25 @@ if (-not (Test-Path $configPath)) {
 
     Write-ColorOutput "first_run.creating_config" -ForegroundColor "White"
 
-    # Используем найденные пути или пути по умолчанию с нормализацией
-    $defaultGamePath = if ($dayzPaths -and $dayzPaths.Release) { $dayzPaths.Release } else { "e:/SteamLibrary/steamapps/common/DayZ/" }
-    $defaultExpGamePath = if ($dayzPaths -and $dayzPaths.Experimental) { $dayzPaths.Experimental } else { "e:/SteamLibrary/steamapps/common/DayZ Exp/" }
-    $defaultWorkshopPath = if ($dayzPaths -and $dayzPaths.Workshop) { $dayzPaths.Workshop } else { "e:/SteamLibrary/steamapps/common/DayZ/!Workshop/" }
+    $defaultGamePath = if ($dayzPaths -and $dayzPaths.Release) {
+        $dayzPaths.Release
+    }
+    else {
+        "C:/SteamLibrary/steamapps/common/DayZ/"
+    }
+    $defaultExpGamePath = if ($dayzPaths -and $dayzPaths.Experimental) {
+        $dayzPaths.Experimental
+    }
+    else {
+        "C:/SteamLibrary/steamapps/common/DayZ Exp/"
+    }
+    $defaultWorkshopPath = if ($dayzPaths -and $dayzPaths.Workshop) {
+        $dayzPaths.Workshop
+    }
+    else {
+        "C:/SteamLibrary/steamapps/common/DayZ/!Workshop/"
+    }
 
-    # В части создания конфигурации по умолчанию обновляем пресеты:
     $defaultConfig = @{
         active = @{
             serverPreset = "release"
@@ -343,10 +327,10 @@ if (-not (Test-Path $configPath)) {
         serverPresets = @{
             release = @{
                 gamePath = $defaultGamePath
-                serverPath = "e:/DayZServer/"
-                profilePath = "e:/DayZServer/profiles/"
+                serverPath = "C:/DayZServer/"
+                profilePath = "C:/DayZServer/profiles/"
                 missionPath = ""
-                serverPort = 2400
+                serverPort = 2300
                 serverConfig = "ServerDev.cfg"
                 isDiagMode = $false
                 isExperimental = $false
@@ -354,14 +338,14 @@ if (-not (Test-Path $configPath)) {
                 cleanLogs = "all"
                 workshop = @{
                     steam = $defaultWorkshopPath
-                    local = "e:/PDrive/"
+                    local = "C:/PDrive/"
                 }
             }
 
             experimental = @{
                 gamePath = $defaultExpGamePath
-                serverPath = "e:/DayZServerExperimental/"
-                profilePath = "e:/DayZServerExperimental/profiles/"
+                serverPath = "C:/DayZServerExperimental/"
+                profilePath = "C:/DayZServerExperimental/profiles/"
                 missionPath = ""
                 serverPort = 2400
                 serverConfig = "ServerDev.cfg"
@@ -371,16 +355,16 @@ if (-not (Test-Path $configPath)) {
                 isFilePatching = $false
                 workshop = @{
                     steam = $defaultWorkshopPath
-                    local = "e:/PDrive/"
+                    local = "C:/PDrive/"
                 }
             }
 
             myPreset1 = @{
                 gamePath = $defaultGamePath
-                serverPath = "e:/DayZServer/"
-                profilePath = "e:/DayZServer/profiles/"
+                serverPath = "C:/DayZServer/"
+                profilePath = "C:/DayZServer/profiles/"
                 missionPath = ""
-                serverPort = 2400
+                serverPort = 2500
                 serverConfig = "ServerDev.cfg"
                 isDiagMode = $true
                 isExperimental = $false
@@ -388,7 +372,7 @@ if (-not (Test-Path $configPath)) {
                 cleanLogs = "all"
                 workshop = @{
                     steam = $defaultWorkshopPath
-                    local = "e:/PDrive/"
+                    local = "C:/PDrive/"
                 }
             }
         }
@@ -402,19 +386,18 @@ if (-not (Test-Path $configPath)) {
             myPreset1 = @{
                 client = @(
                     "`$steam/@CF"
-                    "`$steam/@Dabs Framework"
                     "`$steam/@VPPAdminTools"
                     "`$steam/@Notifications"
+                    "`$local/@MyClientMod"
                 )
                 server = @(
-                    "My_serverMod"
-                    "`$local/@MPG_Spawner"
+                    "My_ServerMod"
+                    "`$steam/@MPG_Spawner"
                 )
             }
         }
     }
 
-    # Сохраняем конфигурацию
     $jsonConfig = $defaultConfig | ConvertTo-Json -Depth 10
     $jsonConfig | Set-Content -Path $configPath -Encoding UTF8
 
@@ -424,7 +407,6 @@ if (-not (Test-Path $configPath)) {
     New-DayZShortcuts
     Write-ColorOutput "first_run.shortcuts_created" -ForegroundColor "Green"
 
-    # Добавляем пустую строку перед списком шагов
     Write-ColorOutput " " -NoLocalization
     Write-ColorOutput "first_run.what_next" -ForegroundColor "Yellow"
     $steps = Get-LocalizedString "first_run.next_steps"
@@ -438,7 +420,6 @@ if (-not (Test-Path $configPath)) {
     return
 }
 
-# Загрузка конфигурации
 $config = Get-Content -Path $configPath -Raw | ConvertFrom-Json
 
 # Получение выбранных пресетов
@@ -515,6 +496,7 @@ $clearLogsServer = $cleanLogsMode -eq "all" -or $cleanLogsMode -eq "server"
 # Определение пути к логам клиента в зависимости от типа сборки
 if ($isExperimental) {
     $clientLogsPath = "$env:LOCALAPPDATA\DayZ Exp"
-} else {
+}
+else {
     $clientLogsPath = "$env:LOCALAPPDATA\DayZ"
 }

@@ -1,15 +1,14 @@
-param (
-    [Parameter(Mandatory=$false)]
+param ([Parameter(Mandatory = $false)]
     [ValidateSet("server", "client", "all")]
-    [string]$mode = "all"
-)
+    [string]$mode = "all",
 
-# Загружаем общие функции и конфигурацию
+    [Parameter(Mandatory = $false)]
+    [switch]$silent = $false)
+
 $scriptPath = $MyInvocation.MyCommand.Path
 $scriptDir = Split-Path -Parent $scriptPath
 . (Join-Path $scriptDir "config.ps1")
 
-# Устанавливаем заголовок окна
 $host.UI.RawUI.WindowTitle = Get-LocalizedString "window_title"
 
 # Функция для остановки сервера
@@ -17,7 +16,8 @@ function Stop-DayZServer {
     Write-ColorOutput "info.stopping_server" -ForegroundColor "Yellow" -Prefix "prefixes.server"
     if ($isDiagMode) {
         Stop-Process -Name "DayZDiag_x64" -Force -ErrorAction SilentlyContinue
-    } else {
+    }
+    else {
         Stop-Process -Name "DayZServer_x64" -Force -ErrorAction SilentlyContinue
     }
 }
@@ -27,24 +27,29 @@ function Stop-DayZClient {
     Write-ColorOutput "info.stopping_client" -ForegroundColor "Yellow" -Prefix "prefixes.client"
     if ($isDiagMode) {
         Stop-Process -Name "DayZDiag_x64" -Force -ErrorAction SilentlyContinue
-    } else {
+    }
+    else {
         Stop-Process -Name "DayZ_x64" -Force -ErrorAction SilentlyContinue
     }
 }
 
-# Останавливаем компоненты в зависимости от выбранного режима
 switch ($mode) {
-    "server" { Stop-DayZServer }
-    "client" { Stop-DayZClient }
+    "server" {
+        Stop-DayZServer
+    }
+    "client" {
+        Stop-DayZClient
+    }
     "all" {
         Stop-DayZServer
         Stop-DayZClient
     }
 }
 
-Write-ColorOutput "info.launch_complete" -ForegroundColor "Green" -Prefix "prefixes.system"
+if (!$silent) {
+    Write-ColorOutput "info.launch_complete" -ForegroundColor "Green" -Prefix "prefixes.system"
+}
 
-# Запускаем таймер только если autoCloseTime больше 0
 if ($autoCloseTime -gt 0) {
     1..$autoCloseTime | ForEach-Object {
         $timeLeft = $autoCloseTime - $_ + 1

@@ -1,10 +1,6 @@
 # Функция для проверки, запущен ли процесс
 function Test-ProcessRunning {
-    param (
-        [string]$ProcessName,
-        [int]$RetryCount = 3,
-        [int]$RetryDelay = 1
-    )
+    param ([string]$ProcessName, [int]$RetryCount = 3, [int]$RetryDelay = 1)
 
     for ($i = 0; $i -lt $RetryCount; $i++) {
         $process = Get-Process -Name $ProcessName -ErrorAction SilentlyContinue
@@ -18,10 +14,10 @@ function Test-ProcessRunning {
 
 # Очистка логов сервера
 if ($clearLogsServer) {
-    # Проверяем, не запущен ли сервер
     if (Test-ProcessRunning "DayZServer_x64" -RetryCount 2 -RetryDelay 1) {
         Write-ColorOutput "logs.server_running" -ForegroundColor "Yellow" -Prefix "prefixes.logs"
-    } else {
+    }
+    else {
         Write-ColorOutput "logs.cleaning_server" -ForegroundColor "White" -Prefix "prefixes.logs"
 
         # Очистка логов в папке сервера
@@ -42,7 +38,8 @@ if ($clearLogsServer) {
                 Write-ColorOutput "logs.deleting" -ForegroundColor "White" -Prefix "prefixes.logs" -FormatArgs @($log.FullName)
                 Remove-Item $log.FullName -Force -ErrorAction SilentlyContinue
             }
-        } else {
+        }
+        else {
             Write-ColorOutput "logs.profile_not_found" -ForegroundColor "White" -Prefix "prefixes.logs"
         }
     }
@@ -50,10 +47,10 @@ if ($clearLogsServer) {
 
 # Очистка логов клиента
 if ($clearLogsClient) {
-    # Проверяем, не запущен ли клиент
     if (Test-ProcessRunning "DayZ_x64" -RetryCount 2 -RetryDelay 1) {
         Write-ColorOutput "logs.client_running" -ForegroundColor "Yellow" -Prefix "prefixes.logs"
-    } else {
+    }
+    else {
         Write-ColorOutput "logs.cleaning_client" -ForegroundColor "White" -Prefix "prefixes.logs" -FormatArgs @($clientLogsPath)
 
         $clientLogs = Get-ChildItem -Path $clientLogsPath -Include "*.log","*.mdmp","*.RPT" -Recurse -ErrorAction SilentlyContinue

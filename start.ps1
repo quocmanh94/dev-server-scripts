@@ -1,14 +1,9 @@
-# Скрипт для запуска сервера и/или клиента DayZ
-param (
-    [Parameter(Position = 0)]
+param ([Parameter(Position = 0)]
     [ValidateSet("all", "server", "client", "")]
-    [string]$startType = "all"
-)
+    [string]$startType = "all")
 
-# Загрузка конфигурации
 . "$PSScriptRoot\scripts\config.ps1"
 
-# Установка заголовка окна
 $host.UI.RawUI.WindowTitle = Get-LocalizedString "window_title"
 
 # Проверка на первый запуск
@@ -19,12 +14,27 @@ if ($script:isFirstRun) {
 }
 
 # Определение имен исполняемых файлов в зависимости от режима
-$serverExeName = if ($isDiagMode) { "DayZDiag_x64.exe" } else { "DayZServer_x64.exe" }
-$clientExeName = if ($isDiagMode) { "DayZDiag_x64.exe" } else { "DayZ_BE.exe" }
+$serverExeName = if ($isDiagMode) {
+    "DayZDiag_x64.exe"
+}
+else {
+    "DayZServer_x64.exe"
+}
+$clientExeName = if ($isDiagMode) {
+    "DayZDiag_x64.exe"
+}
+else {
+    "DayZ_BE.exe"
+}
 $isFilePatching = $serverPreset.isFilePatching
 
 # Проверка наличия исполняемых файлов
-$serverExe = if ($isDiagMode) { "$gamePath\$serverExeName" } else { "$serverPath\$serverExeName" }
+$serverExe = if ($isDiagMode) {
+    "$gamePath\$serverExeName"
+}
+else {
+    "$serverPath\$serverExeName"
+}
 $clientExe = "$gamePath\$clientExeName"
 
 if (($startType -eq "all" -or $startType -eq "server") -and -not (Test-Path $serverExe)) {
@@ -37,7 +47,6 @@ if (($startType -eq "all" -or $startType -eq "client") -and -not (Test-Path $cli
     exit 1
 }
 
-# Обновляем проверку пути к миссии, убирая Trim('/')
 if ($isDiagMode -and [string]::IsNullOrEmpty($missionPath)) {
     Write-ColorOutput "errors.mission_path_required" -ForegroundColor "Red" -Prefix "prefixes.error"
     exit 1
@@ -48,11 +57,12 @@ if ($isDiagMode -and -not (Test-Path $missionPath)) {
     exit 1
 }
 
-# Вывод информации о конфигурации
+# Вывод информации о конфиге
 Write-ColorOutput "info.server_config" -ForegroundColor "Cyan"
 Write-ColorOutput "separator" -ForegroundColor "Cyan"
 Write-ConfigParam "info.server_preset" -Padding 16 $selectedServerPreset
 Write-ConfigParam "info.mod_preset" -Padding 16 $selectedModPreset
+
 if ($isExperimental) {
     Write-ConfigParam "info.build_type" (Get-LocalizedString "info.experimental") "Yellow"
 }
@@ -62,25 +72,16 @@ if ($isDiagMode) {
 }
 Write-Host ""
 
-# Остановка процессов только если не указан конкретный тип запуска
-if (-not $startType) {
-    Write-ColorOutput "info.stopping_server" -ForegroundColor "Yellow" -Prefix "prefixes.server"
-    Stop-Process -Name "DayZServer_x64" -Force -ErrorAction SilentlyContinue
-    Stop-Process -Name "DayZDiag_x64" -Force -ErrorAction SilentlyContinue
-
-    Write-ColorOutput "info.stopping_client" -ForegroundColor "Yellow" -Prefix "prefixes.client"
-    Stop-Process -Name "DayZ_x64" -Force -ErrorAction SilentlyContinue
+# Остановка процессов
+if (-not $startType -or $startType -eq "all") {
+    & "$PSScriptRoot\scripts\kill.ps1" -mode "all" -silent
 }
-# Иначе останавливаем только нужный процесс
 else {
     if ($startType -eq "server") {
-        Write-ColorOutput "info.stopping_server" -ForegroundColor "Yellow" -Prefix "prefixes.server"
-        Stop-Process -Name "DayZServer_x64" -Force -ErrorAction SilentlyContinue
-        Stop-Process -Name "DayZDiag_x64" -Force -ErrorAction SilentlyContinue
+        & "$PSScriptRoot\scripts\kill.ps1" -mode "server" -silent
     }
     elseif ($startType -eq "client") {
-        Write-ColorOutput "info.stopping_client" -ForegroundColor "Yellow" -Prefix "prefixes.client"
-        Stop-Process -Name "DayZ_x64" -Force -ErrorAction SilentlyContinue
+        & "$PSScriptRoot\scripts\kill.ps1" -mode "client" -silent
     }
 }
 
@@ -92,11 +93,10 @@ if ($shouldClearLogs) {
 
 # Запуск сервера
 if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "server") -or -not $startType)) {
-    # Вывод информации о модах
     if ($mod) {
         Write-ColorOutput "info.client_mods" -ForegroundColor "Cyan" -Prefix "prefixes.system"
         $clientMods | ForEach-Object {
-            Write-ColorOutput "info.list_item" -ForegroundColor "White" -Prefix "prefixes.system" -FormatArgs @($_)
+            Write-ColorOutput "info.list_item" -ForegroundColor "White" -Prefix "prefixes.system" -FormatArgs @((Normalize-Path $_))
         }
         Write-Host ""
     }
@@ -104,7 +104,7 @@ if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "serv
     if ($serverMod) {
         Write-ColorOutput "info.server_mods" -ForegroundColor "Cyan" -Prefix "prefixes.system"
         $serverMods | ForEach-Object {
-            Write-ColorOutput "info.list_item" -ForegroundColor "White" -Prefix "prefixes.system" -FormatArgs @($_)
+            Write-ColorOutput "info.list_item" -ForegroundColor "White" -Prefix "prefixes.system" -FormatArgs @((Normalize-Path $_))
         }
         Write-Host ""
     }
@@ -112,14 +112,7 @@ if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "serv
     Write-ColorOutput "info.starting_server" -ForegroundColor "Green" -Prefix "prefixes.system" -FormatArgs @($serverPort)
 
     $serverArgs = @(
-        "-config=$serverConfig",
-        "-profiles=$profilePath",
-        "-port=$serverPort",
-        "-dologs",
-        "-adminlog",
-        "-freezecheck",
-        "-logToFile=1",
-        "-doScriptLogs=1"
+        "-config=$serverConfig", "-profiles=$profilePath", "-port=$serverPort", "-dologs", "-adminlog", "-freezecheck", "-logToFile=1", "-doScriptLogs=1"
     )
 
     if ($isDiagMode) {
@@ -128,11 +121,17 @@ if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "serv
         $serverArgs += "-newErrorsAreWarnings=1"
     }
 
-    if ($mod) { $serverArgs += """-mod=$mod""" }
-    if ($serverMod) { $serverArgs += """-serverMod=$serverMod""" }
-    if ($isFilePatching) { $serverArgs += "-filePatching" }
+    if ($mod) {
+        $serverArgs += """-mod=$mod"""
+    }
+    if ($serverMod) {
+        $serverArgs += """-serverMod=$serverMod"""
+    }
+    if ($isFilePatching) {
+        $serverArgs += "-filePatching"
+    }
 
-    Start-Process -FilePath $serverExe -ArgumentList $serverArgs
+    Start-Process -FilePath $serverExe -ArgumentList (Normalize-Path $serverArgs)
 }
 
 # Запуск клиента
@@ -142,28 +141,26 @@ if ((Test-Path $gamePath) -and (($startType -eq "all" -or $startType -eq "client
     Push-Location $gamePath
 
     $clientArgs = @(
-        "-connect=127.0.0.1",
-        "-port=$serverPort",
-        "-nosplash",
-        "-noPause",
-        "-noBenchmark",
-        "-doLogs"
+        "-connect=127.0.0.1", "-port=$serverPort", "-nosplash", "-noPause", "-noBenchmark", "-doLogs"
     )
 
     if ($isDiagMode) {
         $clientArgs += "-newErrorsAreWarnings=1"
     }
 
-    if ($mod) { $clientArgs += """-mod=$mod""" }
-    if ($isFilePatching) { $clientArgs += "-filePatching" }
+    if ($mod) {
+        $clientArgs += """-mod=$mod"""
+    }
+    if ($isFilePatching) {
+        $clientArgs += "-filePatching"
+    }
 
-    Start-Process -FilePath $clientExe -ArgumentList $clientArgs
+    Start-Process -FilePath $clientExe -ArgumentList (Normalize-Path $clientArgs)
     Pop-Location
 }
 
 Write-ColorOutput "info.launch_complete" -ForegroundColor "Green" -Prefix "prefixes.system"
 
-# Автозакрытие консоли только если autoCloseTime больше 0
 if ($autoCloseTime -gt 0) {
     1..$autoCloseTime | ForEach-Object {
         $timeLeft = $autoCloseTime - $_ + 1
