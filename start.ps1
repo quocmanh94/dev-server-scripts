@@ -134,7 +134,7 @@ if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "serv
     #    Write-ColorOutput (Normalize-Path $serverExe)
     #    Write-ColorOutput (Normalize-Path $serverArgs)
 
-    Start-Process -FilePath $serverExe -ArgumentList (Normalize-Path $serverArgs)
+    Start-Process -FilePath (Normalize-Path $serverExe) -ArgumentList (Normalize-Path $serverArgs)
 }
 
 # Запуск клиента
