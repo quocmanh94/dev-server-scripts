@@ -52,7 +52,10 @@
     },
     "errors": {
       "preset_not_found": "Выбранный пресет {0} '{1}' не найден в конфигурации!",
-      "executable_not_found": "Не найден исполняемый файл {0}: {1}"
+      "executable_not_found": "Не найден исполняемый файл {0}: {1}",
+      "mission_path_required": "Для диагностического режима необходимо указать путь к папке миссии (missionPath)!",
+      "mission_path_not_found": "Не найдена папка миссии: {0}",
+      "server_start_timeout": "Превышено время ожидания запуска сервера!"
     },
     "info": {
       "server_config": "КОНФИГУРАЦИЯ DAYZ СЕРВЕРА",
@@ -62,6 +65,7 @@
       "experimental": "Экспериментальная",
       "mode": "Режим",
       "diagnostic": "Диагностический",
+      "mission_path": "Папка миссии",
       "client_mods": "Моды клиента:",
       "server_mods": "Моды сервера:",
       "list_item": "  • {0}",
@@ -71,7 +75,9 @@
       "starting_server": "Запуск сервера на порту {0}",
       "starting_client": "Запуск клиента (127.0.0.1:{0})",
       "launch_complete": "Запуск завершен!",
-      "press_any_key": "Нажмите любую клавишу для выхода..."
+      "press_any_key": "Нажмите любую клавишу для выхода...",
+      "waiting_server": "Ожидание запуска сервера...",
+      "server_started": "Сервер запущен!"
     },
     "separator": "══════════════════════════",
     "logs": {
@@ -141,7 +147,10 @@
     },
     "errors": {
       "preset_not_found": "Selected {0} preset '{1}' not found in configuration!",
-      "executable_not_found": "{0} executable not found: {1}"
+      "executable_not_found": "{0} executable not found: {1}",
+      "mission_path_required": "Mission path (missionPath) is required for diagnostic mode!",
+      "mission_path_not_found": "Mission path not found: {0}",
+      "server_start_timeout": "Server start timeout exceeded!"
     },
     "info": {
       "server_config": "DAYZ SERVER CONFIGURATION",
@@ -151,6 +160,7 @@
       "experimental": "Experimental",
       "mode": "Mode",
       "diagnostic": "Diagnostic",
+      "mission_path": "Mission Path",
       "client_mods": "Client mods:",
       "server_mods": "Server mods:",
       "list_item": "  • {0}",
@@ -160,7 +170,9 @@
       "starting_server": "Starting server on port {0}",
       "starting_client": "Starting client (127.0.0.1:{0})",
       "launch_complete": "Launch complete!",
-      "press_any_key": "Press any key to exit..."
+      "press_any_key": "Press any key to exit...",
+      "waiting_server": "Waiting for server to start...",
+      "server_started": "Server started!"
     },
     "separator": "══════════════════════════",
     "logs": {

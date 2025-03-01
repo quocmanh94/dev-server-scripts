@@ -218,19 +218,22 @@ function Resolve-ModPath {
     }
 }
 
-# Добавим функцию для нормализации путей
+# Заменяем функцию Format-Path на новую версию
 function Format-Path {
     param (
-        [string]$path
+        [string]$path,
+        [switch]$noTrailingSlash
     )
 
     if (-not $path) {
         return $path
     }
 
-    # Заменяем обратные слеши на прямые и добавляем слеш в конце, если его нет
+    # Заменяем обратные слеши на прямые
     $normalizedPath = $path.Replace('\', '/')
-    if (-not $normalizedPath.EndsWith('/')) {
+
+    # Добавляем слеш в конце только если не указан параметр noTrailingSlash
+    if (-not $noTrailingSlash -and -not $normalizedPath.EndsWith('/')) {
         $normalizedPath = "$normalizedPath/"
     }
 
@@ -328,6 +331,7 @@ if (-not (Test-Path $configPath)) {
     $defaultExpGamePath = if ($dayzPaths -and $dayzPaths.Experimental) { $dayzPaths.Experimental } else { "e:/SteamLibrary/steamapps/common/DayZ Exp/" }
     $defaultWorkshopPath = if ($dayzPaths -and $dayzPaths.Workshop) { $dayzPaths.Workshop } else { "e:/SteamLibrary/steamapps/common/DayZ/!Workshop/" }
 
+    # В части создания конфигурации по умолчанию обновляем пресеты:
     $defaultConfig = @{
         active = @{
             serverPreset = "release"
@@ -341,10 +345,12 @@ if (-not (Test-Path $configPath)) {
                 gamePath = $defaultGamePath
                 serverPath = "e:/DayZServer/"
                 profilePath = "e:/DayZServer/profiles/"
+                missionPath = ""
                 serverPort = 2400
                 serverConfig = "ServerDev.cfg"
                 isDiagMode = $false
                 isExperimental = $false
+                isFilePatching = $false
                 cleanLogs = "all"
                 workshop = @{
                     steam = $defaultWorkshopPath
@@ -356,11 +362,13 @@ if (-not (Test-Path $configPath)) {
                 gamePath = $defaultExpGamePath
                 serverPath = "e:/DayZServerExperimental/"
                 profilePath = "e:/DayZServerExperimental/profiles/"
+                missionPath = ""
                 serverPort = 2400
                 serverConfig = "ServerDev.cfg"
                 cleanLogs = "server"
                 isDiagMode = $false
                 isExperimental = $true
+                isFilePatching = $false
                 workshop = @{
                     steam = $defaultWorkshopPath
                     local = "e:/PDrive/"
@@ -448,6 +456,7 @@ $modPreset = $config.modsPresets.$selectedModPreset
 $gamePath = $serverPreset.gamePath
 $serverPath = $serverPreset.serverPath
 $profilePath = $serverPreset.profilePath
+$missionPath = $serverPreset.missionPath
 $serverPort = $serverPreset.serverPort
 $serverConfig = $serverPreset.serverConfig
 $isDiagMode = $serverPreset.isDiagMode
@@ -458,10 +467,11 @@ $cleanLogsMode = $serverPreset.cleanLogs
 $steamWorkshopPath = $serverPreset.workshop.steam
 $localModsPath = $serverPreset.workshop.local
 
-# После загрузки конфигурации нормализуем все пути
+# После загрузки конфигурации обновляем нормализацию путей
 $gamePath = Format-Path $serverPreset.gamePath
 $serverPath = Format-Path $serverPreset.serverPath
 $profilePath = Format-Path $serverPreset.profilePath
+$missionPath = Format-Path $serverPreset.missionPath -noTrailingSlash
 $steamWorkshopPath = Format-Path $serverPreset.workshop.steam
 $localModsPath = Format-Path $serverPreset.workshop.local
 
@@ -491,4 +501,3 @@ if ($isExperimental) {
 } else {
     $clientLogsPath = "$env:LOCALAPPDATA\DayZ"
 }
-

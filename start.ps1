@@ -18,9 +18,14 @@ if ($script:isFirstRun) {
     exit 0
 }
 
+# Определение имен исполняемых файлов в зависимости от режима
+$serverExeName = if ($isDiagMode) { "DayZDiag_x64.exe" } else { "DayZServer_x64.exe" }
+$clientExeName = if ($isDiagMode) { "DayZDiag_x64.exe" } else { "DayZ_BE.exe" }
+$isFilePatching = $serverPreset.isFilePatching
+
 # Проверка наличия исполняемых файлов
-$serverExe = "$serverPath\DayZServer_x64.exe"
-$clientExe = "$gamePath\DayZ_BE.exe"
+$serverExe = if ($isDiagMode) { "$gamePath\$serverExeName" } else { "$serverPath\$serverExeName" }
+$clientExe = "$gamePath\$clientExeName"
 
 if (($startType -eq "all" -or $startType -eq "server") -and -not (Test-Path $serverExe)) {
     Write-ColorOutput "errors.executable_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("server", $serverExe)
@@ -28,7 +33,18 @@ if (($startType -eq "all" -or $startType -eq "server") -and -not (Test-Path $ser
 }
 
 if (($startType -eq "all" -or $startType -eq "client") -and -not (Test-Path $clientExe)) {
-    Write-ColorOutput "errors.executable_not_found" -ForegroundColor "Red" -Prefix "ОШИБКА" -FormatArgs @("client", $clientExe)
+    Write-ColorOutput "errors.executable_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("client", $clientExe)
+    exit 1
+}
+
+# Обновляем проверку пути к миссии, убирая Trim('/')
+if ($isDiagMode -and [string]::IsNullOrEmpty($missionPath)) {
+    Write-ColorOutput "errors.mission_path_required" -ForegroundColor "Red" -Prefix "prefixes.error"
+    exit 1
+}
+
+if ($isDiagMode -and -not (Test-Path $missionPath)) {
+    Write-ColorOutput "errors.mission_path_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @($missionPath)
     exit 1
 }
 
@@ -42,18 +58,30 @@ if ($isExperimental) {
 }
 if ($isDiagMode) {
     Write-ConfigParam "info.mode" (Get-LocalizedString "info.diagnostic") "Yellow"
+    Write-ConfigParam "info.mission_path" $missionPath "Yellow"
 }
 Write-Host ""
 
-# Остановка существующих процессов
-if (($startType -eq "all" -or $startType -eq "server") -or -not $startType) {
+# Остановка процессов только если не указан конкретный тип запуска
+if (-not $startType) {
     Write-ColorOutput "info.stopping_server" -ForegroundColor "Yellow" -Prefix "prefixes.server"
     Stop-Process -Name "DayZServer_x64" -Force -ErrorAction SilentlyContinue
-}
+    Stop-Process -Name "DayZDiag_x64" -Force -ErrorAction SilentlyContinue
 
-if (($startType -eq "all" -or $startType -eq "client") -or -not $startType) {
     Write-ColorOutput "info.stopping_client" -ForegroundColor "Yellow" -Prefix "prefixes.client"
     Stop-Process -Name "DayZ_x64" -Force -ErrorAction SilentlyContinue
+}
+# Иначе останавливаем только нужный процесс
+else {
+    if ($startType -eq "server") {
+        Write-ColorOutput "info.stopping_server" -ForegroundColor "Yellow" -Prefix "prefixes.server"
+        Stop-Process -Name "DayZServer_x64" -Force -ErrorAction SilentlyContinue
+        Stop-Process -Name "DayZDiag_x64" -Force -ErrorAction SilentlyContinue
+    }
+    elseif ($startType -eq "client") {
+        Write-ColorOutput "info.stopping_client" -ForegroundColor "Yellow" -Prefix "prefixes.client"
+        Stop-Process -Name "DayZ_x64" -Force -ErrorAction SilentlyContinue
+    }
 }
 
 # Очистка логов, если требуется
@@ -94,11 +122,17 @@ if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "serv
         "-doScriptLogs=1"
     )
 
+    if ($isDiagMode) {
+        $serverArgs += "-server"
+        $serverArgs += "-mission=$missionPath"
+        $serverArgs += "-newErrorsAreWarnings=1"
+    }
+
     if ($mod) { $serverArgs += """-mod=$mod""" }
     if ($serverMod) { $serverArgs += """-serverMod=$serverMod""" }
-    if ($isDiagMode) { $serverArgs += "-filePatching" }
+    if ($isFilePatching) { $serverArgs += "-filePatching" }
 
-    Start-Process -FilePath "$serverPath\DayZServer_x64.exe" -ArgumentList $serverArgs
+    Start-Process -FilePath $serverExe -ArgumentList $serverArgs
 }
 
 # Запуск клиента
@@ -116,10 +150,14 @@ if ((Test-Path $gamePath) -and (($startType -eq "all" -or $startType -eq "client
         "-doLogs"
     )
 
-    if ($mod) { $clientArgs += """-mod=$mod""" }
-    if ($isDiagMode) { $clientArgs += "-filePatching" }
+    if ($isDiagMode) {
+        $clientArgs += "-newErrorsAreWarnings=1"
+    }
 
-    Start-Process -FilePath "$gamePath\DayZ_BE.exe" -ArgumentList $clientArgs
+    if ($mod) { $clientArgs += """-mod=$mod""" }
+    if ($isFilePatching) { $clientArgs += "-filePatching" }
+
+    Start-Process -FilePath $clientExe -ArgumentList $clientArgs
     Pop-Location
 }
 

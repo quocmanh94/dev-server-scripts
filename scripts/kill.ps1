@@ -15,13 +15,21 @@ $host.UI.RawUI.WindowTitle = Get-LocalizedString "window_title"
 # Функция для остановки сервера
 function Stop-DayZServer {
     Write-ColorOutput "info.stopping_server" -ForegroundColor "Yellow" -Prefix "prefixes.server"
-    Stop-Process -Name "DayZServer_x64" -Force -ErrorAction SilentlyContinue
+    if ($isDiagMode) {
+        Stop-Process -Name "DayZDiag_x64" -Force -ErrorAction SilentlyContinue
+    } else {
+        Stop-Process -Name "DayZServer_x64" -Force -ErrorAction SilentlyContinue
+    }
 }
 
 # Функция для остановки клиента
 function Stop-DayZClient {
     Write-ColorOutput "info.stopping_client" -ForegroundColor "Yellow" -Prefix "prefixes.client"
-    Stop-Process -Name "DayZ_x64" -Force -ErrorAction SilentlyContinue
+    if ($isDiagMode) {
+        Stop-Process -Name "DayZDiag_x64" -Force -ErrorAction SilentlyContinue
+    } else {
+        Stop-Process -Name "DayZ_x64" -Force -ErrorAction SilentlyContinue
+    }
 }
 
 # Останавливаем компоненты в зависимости от выбранного режима
