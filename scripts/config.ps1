@@ -149,14 +149,14 @@ function New-DayZShortcut {
     # Проверяем наличие папки с иконками
     $iconsFolder = Join-Path $PSScriptRoot "icons"
     if (-not (Test-Path $iconsFolder)) {
-        Write-ColorOutput "shortcuts.icons_not_found" -ForegroundColor "Red" -Prefix "ОШИБКА" -FormatArgs @("icons")
+        Write-ColorOutput "shortcuts.icons_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("icons")
         exit 1
     }
 
     # Проверяем наличие .ico файла
     $iconFile = Join-Path $iconsFolder "$iconType.ico"
     if (-not (Test-Path $iconFile)) {
-        Write-ColorOutput "shortcuts.icon_not_found" -ForegroundColor "Red" -Prefix "ОШИБКА" -FormatArgs @($iconType)
+        Write-ColorOutput "shortcuts.icon_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @($iconType)
         exit 1
     }
 
@@ -408,7 +408,7 @@ if (-not (Test-Path $configPath)) {
     }
 
     if (-not $dayzPaths) {
-        Write-ColorOutput "first_run.set_game_paths" -ForegroundColor "White" -Prefix "ВАЖНО"
+        Write-ColorOutput "first_run.set_game_paths" -ForegroundColor "White" -Prefix "prefixes.important"
     }
     return
 }
@@ -431,12 +431,12 @@ if (-not $autoCloseTime) {
 
 # Проверка существования выбранных пресетов
 if (-not $config.serverPresets.$selectedServerPreset) {
-    Write-ColorOutput "errors.preset_not_found" -ForegroundColor "Red" -Prefix "ОШИБКА" -FormatArgs @("server", $selectedServerPreset)
+    Write-ColorOutput "errors.preset_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("server", $selectedServerPreset)
     exit 1
 }
 
 if (-not $config.modsPresets.$selectedModPreset) {
-    Write-ColorOutput "errors.preset_not_found" -ForegroundColor "Red" -Prefix "ОШИБКА" -FormatArgs @("mod", $selectedModPreset)
+    Write-ColorOutput "errors.preset_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("mod", $selectedModPreset)
     exit 1
 }
 
