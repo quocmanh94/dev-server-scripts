@@ -374,6 +374,23 @@ if (-not (Test-Path $configPath)) {
                     local = "e:/PDrive/"
                 }
             }
+
+            myPreset1 = @{
+                gamePath = $defaultGamePath
+                serverPath = "e:/DayZServer/"
+                profilePath = "e:/DayZServer/profiles/"
+                missionPath = ""
+                serverPort = 2400
+                serverConfig = "ServerDev.cfg"
+                isDiagMode = $true
+                isExperimental = $false
+                isFilePatching = $false
+                cleanLogs = "all"
+                workshop = @{
+                    steam = $defaultWorkshopPath
+                    local = "e:/PDrive/"
+                }
+            }
         }
 
         modsPresets = @{
