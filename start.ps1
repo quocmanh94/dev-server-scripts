@@ -98,7 +98,7 @@ if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "serv
     if ($serverMod) { $serverArgs += """-serverMod=$serverMod""" }
     if ($isDiagMode) { $serverArgs += "-filePatching" }
 
-#    Start-Process -FilePath "$serverPath\DayZServer_x64.exe" -ArgumentList $serverArgs
+    Start-Process -FilePath "$serverPath\DayZServer_x64.exe" -ArgumentList $serverArgs
 }
 
 # Запуск клиента
@@ -119,7 +119,7 @@ if ((Test-Path $gamePath) -and (($startType -eq "all" -or $startType -eq "client
     if ($mod) { $clientArgs += """-mod=$mod""" }
     if ($isDiagMode) { $clientArgs += "-filePatching" }
 
-#    Start-Process -FilePath "$gamePath\DayZ_BE.exe" -ArgumentList $clientArgs
+    Start-Process -FilePath "$gamePath\DayZ_BE.exe" -ArgumentList $clientArgs
     Pop-Location
 }
 
