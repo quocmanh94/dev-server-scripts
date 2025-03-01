@@ -424,8 +424,8 @@ $autoCloseTime = $config.active.autoCloseTime
 # Устанавливаем язык по умолчанию из системы
 Set-CurrentLanguage $config.active.lang
 
-# Если autoCloseTime не задан, устанавливаем значение по умолчанию
-if (-not $autoCloseTime) {
+# Если autoCloseTime не определен (null), устанавливаем значение по умолчанию
+if ($null -eq $autoCloseTime) {
     $autoCloseTime = 20
 }
 

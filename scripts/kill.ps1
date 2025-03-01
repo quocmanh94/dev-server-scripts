@@ -36,7 +36,7 @@ switch ($mode) {
 
 Write-ColorOutput "info.launch_complete" -ForegroundColor "Green" -Prefix "prefixes.system"
 
-# Запускаем таймер
+# Запускаем таймер только если autoCloseTime больше 0
 if ($autoCloseTime -gt 0) {
     1..$autoCloseTime | ForEach-Object {
         $timeLeft = $autoCloseTime - $_ + 1
@@ -44,4 +44,3 @@ if ($autoCloseTime -gt 0) {
         Start-Sleep -Seconds 1
     }
 }
-

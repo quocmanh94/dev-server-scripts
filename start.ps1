@@ -125,7 +125,7 @@ if ((Test-Path $gamePath) -and (($startType -eq "all" -or $startType -eq "client
 
 Write-ColorOutput "info.launch_complete" -ForegroundColor "Green" -Prefix "prefixes.system"
 
-# Автозакрытие консоли
+# Автозакрытие консоли только если autoCloseTime больше 0
 if ($autoCloseTime -gt 0) {
     1..$autoCloseTime | ForEach-Object {
         $timeLeft = $autoCloseTime - $_ + 1
@@ -133,5 +133,3 @@ if ($autoCloseTime -gt 0) {
         Start-Sleep -Seconds 1
     }
 }
-exit
-
