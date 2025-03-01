@@ -48,12 +48,12 @@ switch ($mode) {
 
 if (!$silent) {
     Write-ColorOutput "info.launch_complete" -ForegroundColor "Green" -Prefix "prefixes.system"
-}
 
-if ($autoCloseTime -gt 0) {
-    1..$autoCloseTime | ForEach-Object {
-        $timeLeft = $autoCloseTime - $_ + 1
-        $host.UI.RawUI.WindowTitle = Get-LocalizedString "window_title_closing" -FormatArgs @($timeLeft)
-        Start-Sleep -Seconds 1
+    if ($autoCloseTime -gt 0) {
+        1..$autoCloseTime | ForEach-Object {
+            $timeLeft = $autoCloseTime - $_ + 1
+            $host.UI.RawUI.WindowTitle = Get-LocalizedString "window_title_closing" -FormatArgs @($timeLeft)
+            Start-Sleep -Seconds 1
+        }
     }
 }
