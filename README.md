@@ -23,6 +23,7 @@
 > [!IMPORTANT]
 > Для работы скрипта необходимо установить [powershell 7](https://aka.ms/PowerShell)
 >
+> Релиз powershrshell 7.5: https://github.com/PowerShell/PowerShell/releases/tag/v7.5.0
 
 1. [Скачать релиз](https://github.com/MPG-DayZ/dev-server-scripts/releases/latest)
 2. Распаковать архив в любую папку
