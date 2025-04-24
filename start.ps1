@@ -112,13 +112,14 @@ if ((Test-Path $serverPath) -and (($startType -eq "all" -or $startType -eq "serv
     Write-ColorOutput "info.starting_server" -ForegroundColor "Green" -Prefix "prefixes.system" -FormatArgs @($serverPort)
 
     $serverArgs = @(
-        "-config=$serverConfig", "-profiles=$profilePath", "-port=$serverPort", "-dologs", "-adminlog", "-freezecheck", "-logToFile=1", "-doScriptLogs=1"
+        "-config=$serverConfig", "-profiles=$profilePath", "-port=$serverPort", "-dologs", "-adminlog", "-freezecheck", "-logToFile=1"
     )
 
     if ($isDiagMode) {
         $serverArgs += "-server"
         $serverArgs += "-mission=$missionPath"
         $serverArgs += "-newErrorsAreWarnings=1"
+        $serverArgs += "-doScriptLogs=1"
     }
 
     if ($mod) {
