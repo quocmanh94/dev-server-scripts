@@ -39,21 +39,25 @@ $clientExe = "$gamePath\$clientExeName"
 
 if (($startType -eq "all" -or $startType -eq "server") -and -not (Test-Path $serverExe)) {
     Write-ColorOutput "errors.executable_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("server", $serverExe)
+    Pause
     exit 1
 }
 
 if (($startType -eq "all" -or $startType -eq "client") -and -not (Test-Path $clientExe)) {
     Write-ColorOutput "errors.executable_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("client", $clientExe)
+    Pause
     exit 1
 }
 
 if ($isDiagMode -and [string]::IsNullOrEmpty($missionPath)) {
     Write-ColorOutput "errors.mission_path_required" -ForegroundColor "Red" -Prefix "prefixes.error"
+    Pause
     exit 1
 }
 
 if ($isDiagMode -and -not (Test-Path $missionPath)) {
     Write-ColorOutput "errors.mission_path_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @($missionPath)
+    Pause
     exit 1
 }
 

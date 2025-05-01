@@ -110,12 +110,14 @@ function New-DayZShortcut {
     $iconsFolder = Join-Path $PSScriptRoot "icons"
     if (-not (Test-Path $iconsFolder)) {
         Write-ColorOutput "shortcuts.icons_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("icons")
+        Pause
         exit 1
     }
 
     $iconFile = Join-Path $iconsFolder "$iconType.ico"
     if (-not (Test-Path $iconFile)) {
         Write-ColorOutput "shortcuts.icon_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @($iconType)
+        Pause
         exit 1
     }
 
@@ -433,11 +435,13 @@ if ($null -eq $autoCloseTime) {
 # Проверка существования выбранных пресетов
 if (-not $config.serverPresets.$selectedServerPreset) {
     Write-ColorOutput "errors.preset_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("server", $selectedServerPreset)
+    Pause
     exit 1
 }
 
 if (-not $config.modsPresets.$selectedModPreset) {
     Write-ColorOutput "errors.preset_not_found" -ForegroundColor "Red" -Prefix "prefixes.error" -FormatArgs @("mod", $selectedModPreset)
+    Pause
     exit 1
 }
 
