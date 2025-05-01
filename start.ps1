@@ -27,7 +27,7 @@ $clientExeName = if ($isDiagMode) {
     "DayZDiag_x64.exe"
 }
 elseif ($isDisableBE) {
-    "DayZ_64.exe"
+    "DayZ_x64.exe"
 }
 else {
     "DayZ_BE.exe"
