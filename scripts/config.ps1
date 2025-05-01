@@ -332,6 +332,7 @@ if (-not (Test-Path $configPath)) {
                 isDiagMode = $false
                 isExperimental = $false
                 isFilePatching = $false
+                isDisableBE = $false
                 cleanLogs = "all"
                 workshop = @{
                     steam = $defaultWorkshopPath
@@ -350,6 +351,7 @@ if (-not (Test-Path $configPath)) {
                 isDiagMode = $false
                 isExperimental = $true
                 isFilePatching = $false
+                isDisableBE = $false
                 workshop = @{
                     steam = $defaultWorkshopPath
                     local = "C:/PDrive"
@@ -366,6 +368,7 @@ if (-not (Test-Path $configPath)) {
                 isDiagMode = $true
                 isExperimental = $false
                 isFilePatching = $false
+                isDisableBE = $false
                 cleanLogs = "all"
                 workshop = @{
                     steam = $defaultWorkshopPath
@@ -457,6 +460,8 @@ $missionPath = $serverPreset.missionPath
 $serverPort = $serverPreset.serverPort
 $serverConfig = $serverPreset.serverConfig
 $isDiagMode = $serverPreset.isDiagMode
+$isFilePatching = $serverPreset.isFilePatching
+$isDisableBE = $serverPreset.isDisableBE
 $isExperimental = $serverPreset.isExperimental
 $cleanLogsMode = $serverPreset.cleanLogs
 

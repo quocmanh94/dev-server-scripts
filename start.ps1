@@ -17,16 +17,21 @@ if ($script:isFirstRun) {
 $serverExeName = if ($isDiagMode) {
     "DayZDiag_x64.exe"
 }
+elseif ($isDisableBE) {
+    "DayZServer_x64_NoBe.exe"
+}
 else {
     "DayZServer_x64.exe"
 }
 $clientExeName = if ($isDiagMode) {
     "DayZDiag_x64.exe"
 }
+elseif ($isDisableBE) {
+    "DayZ_64.exe"
+}
 else {
     "DayZ_BE.exe"
 }
-$isFilePatching = $serverPreset.isFilePatching
 
 # Проверка наличия исполняемых файлов
 $serverExe = if ($isDiagMode) {
