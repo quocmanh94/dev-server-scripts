@@ -6,7 +6,8 @@ param ([Parameter(Mandatory = $false)]
 	[switch]$silent = $false)
 
 $scriptPath = $MyInvocation.MyCommand.Path
-$scriptDir = Split-Path -Parent $scriptPath.(Join-Path $scriptDir "config.ps1")
+$scriptDir = Split-Path -Parent $scriptPath
+. (Join-Path $scriptDir "config.ps1")
 
 $host.UI.RawUI.WindowTitle = Get-LocalizedString "window_title"
 
