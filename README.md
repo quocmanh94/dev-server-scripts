@@ -1,53 +1,52 @@
 # dev-server-scripts
 
-Набор скриптов для удобного запуска и перезапуска локального сервера с модами или диагностикой
+A set of scripts for convenient launching and restarting of local server with mods or diagnostics
 
-## Контактная информация:
+## Contact Information:
 
-- Дискорд: https://discord.gg/pww4zwz6rM
-- Гитхаб: https://github.com/MPG-DayZ/dev-server-scripts
+- Discord: https://discord.gg/pww4zwz6rM
+- GitHub: https://github.com/MPG-DayZ/dev-server-scripts
 
-## Возможности
+## Features
 
-- 🚀 Запуск сервера и клиента DayZ вместе или по отдельности
-- 🎮 Поддержка пресетов для настроек сервера и списка модов, что бы не писать каждый раз разные наборы модов для
-  подключения
-- 🌍 Мультиязычность (русский и английский)
-- 🧹 Автоматическая очистка логов сервера и клиента при запуске
-- 🔧 Нормальный запуск DayzDiag с модами
-- 📦 Поддержка экспериментальной версии игры
-- 🛠️ Автоматическое создание конфига и ярлыков при первом запуске скрипта
+- 🚀 Launch DayZ server and client together or separately
+- 🎮 Support for presets for server settings and mod lists, so you don't have to write different mod sets for connection each time
+- 🌍 Multilingual support (Russian and English)
+- 🧹 Automatic cleanup of server and client logs on startup
+- 🔧 Proper DayzDiag launch with mods
+- 📦 Support for experimental game version
+- 🛠️ Automatic config and shortcut creation on first script launch
 
-## Как пользоваться
+## How to Use
 
 > [!IMPORTANT]
-> Для работы скрипта необходимо установить [powershell 7](https://aka.ms/PowerShell)
+> PowerShell 7 is required for the script to work [powershell 7](https://aka.ms/PowerShell)
 >
-> Релиз powershrshell 7.5: https://github.com/PowerShell/PowerShell/releases/tag/v7.5.0
+> PowerShell 7.5 release: https://github.com/PowerShell/PowerShell/releases/tag/v7.5.0
 
-1. [Скачать релиз](https://github.com/MPG-DayZ/dev-server-scripts/releases/latest)
-2. Распаковать архив в любую папку
-3. Запустить файл `start.ps1`
-4. Следовать инструкциям первоначальной настройки конфига.
-5. Запускать нужное через ярлыки, которые автоматически создались.
+1. [Download release](https://github.com/MPG-DayZ/dev-server-scripts/releases/latest)
+2. Extract archive to any folder
+3. Run the `start.ps1` file
+4. Follow the initial config setup instructions
+5. Launch what you need through the automatically created shortcuts
 
-## Что делает скрипт
+## What the Script Does
 
-### Структура файлов после первого запуска
+### File Structure After First Launch
 
 ```
-dev-server-scripts/        # Корневая папка проекта
+dev-server-scripts/        # Project root folder
 │
-├── start.ps1              # Основной скрипт запуска
-├── config.json            # Файл конфигурации
+├── start.ps1              # Main launch script
+├── config.json            # Configuration file
 │
-├── scripts/               # Папка со скриптами
-│   ├── config.ps1         # Скрипт конфигурации запуска
-│   ├── clearlogs.ps1      # Скрипт очистки логов
-│   ├── kill.ps1           # Скрипт остановки процессов
-│   ├── locales.json       # Файл локализации
+├── scripts/               # Scripts folder
+│   ├── config.ps1         # Launch configuration script
+│   ├── clearlogs.ps1      # Log cleanup script
+│   ├── kill.ps1           # Process termination script
+│   ├── locales.json       # Localization file
 │   │
-│   └── icons/             # Папка с иконками для ярлыков
+│   └── icons/             # Icons folder for shortcuts
 │       ├── server-start.ico
 │       ├── server-stop.ico
 │       ├── client-start.ico
@@ -55,7 +54,7 @@ dev-server-scripts/        # Корневая папка проекта
 │       ├── all-start.ico
 │       └── all-stop.ico
 │   
-└── links/                 # Папка с ярлыками запуска
+└── links/                 # Launch shortcuts folder
     ├── Start Server.lnk
     ├── Start Client.lnk
     ├── Start All.lnk
@@ -68,90 +67,90 @@ dev-server-scripts/        # Корневая папка проекта
 
 > [!IMPORTANT]
 >
-> Все пути в файле должны иметь прямые слеши `/`, а не обратные, как в путях винды `\`
+> All paths in the file must use forward slashes `/`, not backslashes like in Windows paths `\`
 >
-> Это сделано для удобства т.к. в json обратные слеши необходимо экранировать обратными слешами 🤡 и это очень не удобно
+> This is done for convenience since in JSON backslashes need to be escaped with backslashes 🤡 which is very inconvenient
 
-config.json - создаётся при первом запуске срипта и требует настройки!
+config.json - created on first script launch and requires configuration!
 
-#### Структура config.json
+#### config.json Structure
 
 ```
 config.json
 │
-├── active                 # Активные настройки
-│   ├── serverPreset       # Имя активного пресета сервера
-│   ├── modPreset          # Имя активного пресета модов
-│   ├── autoCloseTime      # Время автозакрытия в секундах
-│   └── lang               # Язык интерфейса (auto, ru, en)
+├── active                 # Active settings
+│   ├── serverPreset       # Active server preset name
+│   ├── modPreset          # Active mod preset name
+│   ├── autoCloseTime      # Auto-close time in seconds
+│   └── lang               # Interface language (auto, ru, en)
 │
-├── serverPresets          # Пресеты настроек сервера
-│   ├── release            # Пример пресета релизной версии
-│   │   ├── gamePath       # Путь к игре
-│   │   ├── serverPath     # Путь к серверу
-│   │   ├── profilePath    # Путь к профилям
-│   │   ├── missionPath    # Путь к миссии
-│   │   ├── serverPort     # Порт сервера
-│   │   ├── serverConfig   # Имя конфига сервера
-│   │   ├── isDiagMode     # Диагностический режим
-│   │   ├── isDisableBE    # Режим без BattlEye (см ниже)
-│   │   ├── isExperimental # Экспериментальная версия
-│   │   ├── isFilePatching # Режим FilePatching
-│   │   ├── cleanLogs      # Режим очистки логов
-│   │   └── workshop       # Пути к модам
-│   │       ├── steam      # Путь к Workshop Steam
-│   │       └── local      # Путь к локальным модам
+├── serverPresets          # Server settings presets
+│   ├── release            # Release version preset example
+│   │   ├── gamePath       # Game path
+│   │   ├── serverPath     # Server path
+│   │   ├── profilePath    # Profiles path
+│   │   ├── missionPath    # Mission path
+│   │   ├── serverPort     # Server port
+│   │   ├── serverConfig   # Server config name
+│   │   ├── isDiagMode     # Diagnostic mode
+│   │   ├── isDisableBE    # No BattlEye mode (see below)
+│   │   ├── isExperimental # Experimental version
+│   │   ├── isFilePatching # FilePatching mode
+│   │   ├── cleanLogs      # Log cleanup mode
+│   │   └── workshop       # Mod paths
+│   │       ├── steam      # Steam Workshop path
+│   │       └── local      # Local mods path
 │   │
-│   └── experimental       # Пример пресета эксп. версии
-│       └── ...            # Те же параметры
+│   └── experimental       # Experimental version preset example
+│       └── ...            # Same parameters
 │
-└── modsPresets            # Пресеты наборов модов
-    ├── vanilla            # Пример пресета без модов
-    │   ├── client         # Список модов клиента
-    │   └── server         # Список модов сервера
+└── modsPresets            # Mod set presets
+    ├── vanilla            # No mods preset example
+    │   ├── client         # Client mod list
+    │   └── server         # Server mod list
     │
-    └── modded             # Пример пресета с модами
-        ├── client         # Моды клиента
-        └── server         # Моды сервера
+    └── modded             # Modded preset example
+        ├── client         # Client mods
+        └── server         # Server mods
 ```
 
-#### Описание параметров
+#### Parameter Description
 
 **active**
 
-- `serverPreset`: имя пресета из serverPresets
-- `modPreset`: имя пресета из modsPresets
-- `autoCloseTime`: время до закрытия консоли (0 - закрывать без задержки)
-- `lang`: язык интерфейса (auto, ru, en)
+- `serverPreset`: preset name from serverPresets
+- `modPreset`: preset name from modsPresets
+- `autoCloseTime`: time until console closes (0 - close without delay)
+- `lang`: interface language (auto, ru, en)
 
 **serverPresets**
 
-- `gamePath`: абсолютный путь к папке с игрой
-- `serverPath`: абсолютный путь к папке сервера
-- `profilePath`: абсолютный путь к папке профилей
-- `missionPath`: абсолютный путь к папке миссии (для запуска DayzDiag)
-- `serverPort`: порт сервера
-- `serverConfig`: имя файла конфигурации сервера
-- `isDiagMode`: включить диагностический режим
-- `isExperimental`: использовать экспериментальную версию
-- `isFilePatching`: включить режим FilePatching
-- `cleanLogs`: режим очистки логов (all, server, client, none)
-- `workshop`: пути к модам
-    - `steam`: абсолютный путь к папке Workshop Steam
-    - `local`: абсолютный путь к папке локальных модов
+- `gamePath`: absolute path to game folder
+- `serverPath`: absolute path to server folder
+- `profilePath`: absolute path to profiles folder
+- `missionPath`: absolute path to mission folder (for DayzDiag launch)
+- `serverPort`: server port
+- `serverConfig`: server configuration file name
+- `isDiagMode`: enable diagnostic mode
+- `isExperimental`: use experimental version
+- `isFilePatching`: enable FilePatching mode
+- `cleanLogs`: log cleanup mode (all, server, client, none)
+- `workshop`: mod paths
+    - `steam`: absolute path to Steam Workshop folder
+    - `local`: absolute path to local mods folder
 
 **modsPresets**
 
-- `client`: список модов для клиента
-- `server`: список модов для сервера
+- `client`: mod list for client
+- `server`: mod list for server
 
-**Префиксы путей к модам**
+**Mod Path Prefixes**
 
-- `$steam/` = путь относительно `workshop.steam`
-- `$local/` = путь относительно `workshop.local`
-- без префикса = путь будет использоваться как есть
+- `$steam/` = path relative to `workshop.steam`
+- `$local/` = path relative to `workshop.local`
+- no prefix = path will be used as is
 
-**Примеры трансформации путей к модам**
+**Mod Path Transformation Examples**
 
 ```
 "$steam/@CF" -> "e:/SteamLibrary/steamapps/common/DayZ/!Workshop/@CF"
@@ -160,59 +159,53 @@ config.json
 "ServerCustomMod" -> "ServerCustomMod"
 ```
 
-### Варианты запуска скрипта
+### Script Launch Options
 
-1. Первый запуск (`.\start.ps1`)
-    - Поиск установленной игры
-    - Создание конфигурации
-    - Создание ярлыков
-    - Вывод инструкций
+1. First launch (`.\start.ps1`)
+    - Search for installed game
+    - Create configuration
+    - Create shortcuts
+    - Display instructions
 
-2. Простой запуск (`.\start.ps1`)
-    - Остановка сервера и клиента
-    - Очищаются логи сервера и клиента
-    - Запускается серверная и затем клиентская часть
+2. Simple launch (`.\start.ps1`)
+    - Stop server and client
+    - Clear server and client logs
+    - Launch server and then client
 
-3. Запуск только сервера (`.\start.ps1 server`)
-    - Остановка сервера
-    - Очищаются только логи сервера
-    - Запускается только серверная часть
+3. Server only launch (`.\start.ps1 server`)
+    - Stop server
+    - Clear server logs only
+    - Launch server only
 
-4. Запуск только клиента (`.\start.ps1 client`)
-    - Остановка клиента
-    - Очищаются только логи клиента
-    - Запускается только клиентская часть
+4. Client only launch (`.\start.ps1 client`)
+    - Stop client
+    - Clear client logs only
+    - Launch client only
 
-## Режим без BattlEye  (isDisableBE)
+## No BattlEye Mode (isDisableBE)
 
-При включении параметра `isDisableBE` запуск будет происходить для:
+When the `isDisableBE` parameter is enabled, launch will occur for:
 
-- сервера из файла `DayZServer_x64_NoBe.exe` вместо `DayZServer_x64.exe`.
-- клиента из файла `DayZ_x64.exe` вместо  `DayZ_BE.exe`.
+- server from `DayZServer_x64_NoBe.exe` file instead of `DayZServer_x64.exe`.
+- client from `DayZ_x64.exe` file instead of  `DayZ_BE.exe`.
 
-Таким образом служба BattlEye не будет задействована и сервер и клиент будут запускаться гораздо быстрее.
+This way the BattlEye service will not be involved and server and client will start much faster.
 
-При очень частом перезапуске сервера/клиента, а такое происходит почти всегда при отладке модов, BattlEye начинает
-приносить проблемы, включая режим дурачка и проверяя какие-то обновления. Само обновление может затянуться на достаточно
-длительное время и его никак нельзя скипнуть. Это доставляет очень много неудобств.
+With very frequent server/client restarts, which happens almost always when debugging mods, BattlEye starts causing problems, including acting up and checking for updates. The update itself can take quite a long time and cannot be skipped. This causes a lot of inconvenience.
 
-Для решения этой проблемы достаточно воспользоваться патчером для исполняемого файла сервера
+To solve this problem, it's enough to use a patcher for the server executable file.
 
-Важно понимать, что этот патчер вырезает службу BattlEye из сервера и использовать такой сервер в качестве основного, на
-котором будут играть люди, будет нарушением правил распространения игры и совсем небезопасно т.к. налетят читеры и
-сделать с этим ничего нельзя. Используйте этот патчер на свой страх и риск.
+It's important to understand that this patcher removes the BattlEye service from the server and using such a server as the main one where people will play would violate game distribution rules and be completely unsafe since cheaters will come and nothing can be done about it. Use this patcher at your own risk.
 
-### Инструкция по запуску без BattlEye:
+### Instructions for launching without BattlEye:
 
-- Скачать патчер https://github.com/JonathanEke/DayZ-Server-Battleye-Remover
-- Скопировать и переименовать файл `DayZServer_x64.exe` в `DayZServer_x64_NoBe.exe`
-- Перетащить `DayZServer_x64_NoBe.exe` на экзешник с патчером.
-- Установить параметр `isDisableBE` в значение `true`
+- Download patcher https://github.com/JonathanEke/DayZ-Server-Battleye-Remover
+- Copy and rename `DayZServer_x64.exe` file to `DayZServer_x64_NoBe.exe`
+- Drag `DayZServer_x64_NoBe.exe` onto the patcher executable.
+- Set `isDisableBE` parameter to `true`
 
-## Дочитал до конца? Молодец! 🎉
+## Read to the end? Well done! 🎉
 
-Если ты дошёл до конца инструкции, значит для тебя, как и для меня инструкции это не просто пустой звук и ты знаешь
-сколько сил обычно вкладывается в это.
+If you made it to the end of the instructions, it means that for you, like for me, instructions are not just empty words and you know how much effort is usually put into this.
 
-Если этот скрипт сэкономил тебе какое количество ресурсов (время/деньги/нервы) и ты хотел бы отблагодарить
-автора, тебе сюда: https://boosty.to/pafnuty/donate
+If this script saved you some amount of resources (time/money/nerves) and you would like to thank the author, go here: https://boosty.to/pafnuty/donate
