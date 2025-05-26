@@ -31,6 +31,21 @@ function Stop-DayZClient {
 	else {
 		Stop-Process -Name "DayZ_x64" -Force -ErrorAction SilentlyContinue
 	}
+
+	# Add delay to ensure process is fully stopped
+	Start-Sleep -Seconds 2
+	# Clear client logs after stopping
+	if ($shouldClearLogs) {
+		Write-ColorOutput "info.confirm_clear_logs" -ForegroundColor "Yellow" -Prefix "prefixes.logs"
+		$confirmation = Read-Host "Do you want to clear logs? (Y/N) [Y]"
+		if ($confirmation -eq '' -or $confirmation -eq 'Y' -or $confirmation -eq 'y') {
+			Write-ColorOutput "info.clearing_logs" -ForegroundColor "Yellow" -Prefix "prefixes.logs"
+			. "$PSScriptRoot\clearlogs.ps1"
+		}
+		else {
+			Write-ColorOutput "info.skip_clearing_logs" -ForegroundColor "Yellow" -Prefix "prefixes.logs"
+		}
+	}
 }
 
 switch ($mode) {

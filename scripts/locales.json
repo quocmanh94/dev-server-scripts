@@ -76,7 +76,9 @@
 			"launch_complete": "Скрипт завершен!",
 			"press_any_key": "Нажмите любую клавишу для выхода...",
 			"waiting_server": "Ожидание запуска сервера...",
-			"server_started": "Сервер запущен!"
+			"server_started": "Сервер запущен!",
+			"confirm_clear_logs": "Вы хотите очистить логи?",
+			"skip_clearing_logs": "Пропуск очистки логов"
 		},
 		"separator": "══════════════════════════",
 		"logs": {
@@ -170,7 +172,9 @@
 			"launch_complete": "Script complete!",
 			"press_any_key": "Press any key to exit...",
 			"waiting_server": "Waiting for server to start...",
-			"server_started": "Server started!"
+			"server_started": "Server started!",
+			"confirm_clear_logs": "Do you want to clear the logs?",
+			"skip_clearing_logs": "Skipping log cleanup"
 		},
 		"separator": "══════════════════════════",
 		"logs": {
