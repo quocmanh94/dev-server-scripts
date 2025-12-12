@@ -154,7 +154,7 @@ if ((Test-Path $gamePath) -and (($startType -eq "all" -or $startType -eq "client
 	Push-Location $gamePath
 
 	$clientArgs = @(
-		"-connect=192.168.1.4", "-port=$serverPort", "-nosplash", "-noPause", "-noBenchmark", "-doLogs"
+		"-connect=127.0.0.1", "-port=$serverPort", "-nosplash", "-noPause", "-noBenchmark", "-doLogs"
 	)
 
 	if ($isDiagMode) {
